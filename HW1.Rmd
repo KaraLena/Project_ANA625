@@ -1,0 +1,242 @@
+---
+output:
+  pdf_document: default
+---
+---
+title: "Insurance"
+author: "Kara Lena"
+date: "August 12, 2018"
+output: 
+  word_document:"HW1"
+  ---
+
+```{r}
+# use the read.csv command followed by the file path 
+insurance <- read.csv('file:///C:/Users/Kara Lena/Documents/ANA625/WK1/insurance.csv')
+```
+
+```{r}
+str(insurance)
+
+```
+
+
+```{r}
+# i ran a summary of all our variables first to get general summarized information about the data
+summary(insurance)
+```
+```{r}
+# exploring relationships among features: correlation matrix
+cor(insurance[c("age", "bmi", "children", "charges")])
+```
+
+
+```{r}
+# next, i decided to visualize the data with an informative scatterplot matrix showing all variables, even though we assume some will be unnecessary
+library(psych)
+
+pairs.panels(insurance[c("age", "sex", "bmi", "children", "smoker", "region", "charges") ], main = "Scatterplot Matrix of All Variables for Insurance.csv")
+```
+
+
+```{r}
+# We can see an obvious and expected correlation between smoking and charges. That aside, we can look at a more interesting and less obvious correlation between Age and Charges, as well as between BMI and Charges.
+
+# more informative scatterplot matrix focusing on non-binary and categorical variables
+library(psych)
+
+pairs.panels(insurance[c("age", "bmi", "children", "charges")])
+```
+
+```{r}
+# histograms of insurance
+hist(insurance$age, main = "Histogram of Ages in Years", xlab = "Age (Yrs.)", col = "magenta")
+```
+
+```{r}
+hist(insurance$charges, main = "Histogram of Insurance Charges", xlab = "Charges ($)", col = "light blue")
+```
+
+
+```{r}
+#Now for a closer look...
+plot(insurance$age, insurance$charges,
+     main = "Scatterplot of Age vs. Charges",
+     xlab = "Age (Yrs.)",
+     ylab = "Charges ($)", 
+     col = "purple",
+     pch = 19)
+lin_model <-lm(insurance$charges~insurance$age)
+abline(lin_model, col = "#FF3300")
+
+```
+```{r}
+# By running the following summary we can prove that age and charges have a statistically significant relationship by looking at the p-value. We can see that the p-value < 0.05, which allows us to reject the null and state that there is, indeed a statistically significant correlation. See the variable analysis below.
+summary(lin_model)
+```
+
+
+```{r}
+#And a closer look at BMI vs. Charges...
+plot(insurance$bmi, insurance$charges,
+     main = "Scatterplot of BMI vs. Charges",
+     xlab = "BMI",
+     ylab = "Charges ($)", 
+     col = "Magenta",
+     pch = 19)
+lin_model_2 <-lm(insurance$charges~insurance$bmi)
+abline(lin_model, col = "#FF3300")
+```
+
+
+```{r}
+# By running the following summary we can prove that age and charges have a statistically significant relationship by looking at the p-value. We can see that the p-value < 0.05, which allows us to reject the null and state that there is, indeed a statistically significant correlation. See the variable analysis below.
+summary(lin_model_2)
+```
+
+
+
+```{r}
+# To get the mode, I created the following function:
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+```{r}
+ModeAge <-getmode(insurance$age)
+ModeAge
+```
+
+```{r}
+ModeBMI <-getmode(insurance$bmi)
+ModeBMI
+```
+
+```{r}
+ModeChild <-getmode(insurance$children)
+ModeChild
+```
+
+```{r}
+ModeChrg <-getmode(insurance$charges)
+ModeChrg
+```
+
+```{r}
+ModeRegion <-getmode(insurance$region)
+ModeRegion
+```
+```{r}
+# More information: variance and standard deviation of the insurance data
+var(insurance$age)
+sd(insurance$age)
+var(insurance$bmi)
+sd(insurance$bmi)
+var(insurance$charges)
+sd(insurance$charges)
+```
+
+```{r}
+
+# boxplot of Charges and Age
+boxplot(insurance$charges, main="Boxplot of Charges",
+        xlab="Charges", ylab ="Dollars", col = "dark green")
+
+```
+```{r}
+boxplot(insurance$age, main="Boxplot of Age",
+        xlab="Age", ylab ="Years", col = "lavender")
+```
+```{r}
+# boxplot of Charges against Age
+boxplot(insurance$charges~insurance$age, main="Boxplot of Age vs. Charges",
+        xlab="Age (Yrs.)", ylab ="Charges ($)", col = "magenta")
+```
+
+
+```{r}
+rating  <- rnorm(1338)
+ratingAge  <- rnorm(1338, mean = 39.21, sd = 14.05)
+ratingBMI  <- rnorm(1338, mean = 30.66, sd = 6.1)
+ratingCharges  <- rnorm(1338, mean = 13270, sd = 12110.01)
+str(rating)
+
+# Use 8 bins (this is only approximate - it places boundaries on nice round numbers)
+# Make it light blue #CCCCFF
+# Instead of showing count, make area sum to 1, (freq=FALSE)
+hist(rating, breaks=20, col="#CCCCFF", freq=FALSE)
+```
+```{r}
+# Use 8 bins (this is only approximate - it places boundaries on nice round numbers)
+# Make it light blue #CCCCFF
+# Instead of showing count, make area sum to 1, (freq=FALSE)
+hist(ratingAge, breaks=20, col="#CCCCFF", freq=FALSE)
+
+
+```
+
+```{r}
+# Kernel density plot
+plot(density(rating))
+```
+```{r}
+# Kernel density plot
+plot(density(ratingAge), col = "magenta")
+```
+```{r}
+# Kernel density plot
+plot(density(ratingCharges), col = "green")
+```
+```{r}
+# Kernel density plot
+plot(density(ratingBMI), col = "blue")
+```
+
+
+```{r}
+
+######### Q-Q plot
+# Compare the numbers sampled with rnorm() against normal distribution
+qqnorm(rating, col = "magenta")
+qqline(rating, col = "blue", lty = "dashed")
+
+```
+
+
+```{r}
+# The same numbers to the 4th power, compared to the normal distribution
+qqnorm(rating^4, col = "light blue")
+qqline(rating^4, col = "blue", lty = "dashed")
+
+
+```
+```{r}
+# Uniformly distributed numbers
+z <- runif(80)
+
+# Numbers sampled from the flat distribution, compared to normal
+qqnorm(z, col = "brown")
+qqline(z, col = "orange")
+```
+
+
+```{r}
+
+################## Training a model on the data ----
+ins_model <- lm(charges ~ age + children + bmi + sex + smoker + region,
+                data = insurance)
+# ins_model <- lm(charges ~ ., data = insurance) # this is equivalent to above
+
+# see the estimated beta coefficients
+ins_model
+
+```
+```{r}
+########### Step 4: Evaluating model performance ----
+# see more detail about the estimated beta coefficients
+summary(ins_model)
+```
+
+
