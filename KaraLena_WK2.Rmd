@@ -1,0 +1,139 @@
+---
+title: "Kara_Lena_HW2"
+author: "klena"
+date: "August 19, 2018"
+output: pdf_document
+---
+
+```{r}
+
+data(UCBAdmissions, package="datasets") # load the data
+str(UCBAdmissions)
+```
+```{r}
+
+View(UCBAdmissions)
+```
+
+```{r}
+#2.3 (a)	Find the total number of cases contained in this table.
+summary(UCBAdmissions)
+```
+```{r}
+#2.3 (b)	For each department, find the total number of applicants.
+margin.table(UCBAdmissions, margin = 3)
+```
+
+```{r}
+#2.3 (c)	For each department, find the overall proportion of applicants who were admitted.
+prop.table(xtabs(Freq ~ Admit + Dept, data = UCBAdmissions),2)
+```
+```{r}
+#2.3 (d)	Construct a tabular display of department (rows) and gender (columns), showing the proportion of applicants in each cell who were admitted relative to the total applicants in that cell
+mytable <- xtabs(Freq ~ Dept + Admit + Gender, data = UCBAdmissions)
+ftable(prop.table(mytable, c(1,3)))
+```
+```{r}
+#2.5 (a)	Verify that the total number of games represented in this table is 380
+data(UKSoccer, package="vcd") # load the data
+View(UKSoccer)
+```
+
+```{r}
+summary(UKSoccer)
+```
+```{r}
+#2.5 (b)	Find the marginal total of the number of goals scored by each of the home and away teams
+#data.frame(UKSoccer)
+margin.table(UKSoccer,1)
+```
+```{r}
+margin.table(UKSoccer,2)
+```
+```{r}
+home<-margin.table(UKSoccer,1)
+away<-margin.table(UKSoccer,2)
+prop.table(home)
+```
+```{r}
+prop.table(away)
+```
+```{r}
+#2.5 (c)	Express each of the marginal totals as proportions
+prop.table(addmargins(UKSoccer))
+
+```
+```{r}
+#2.5 (d)	Comment on the distribution of the numbers of home-team and away-team goals. Is there any evidence that home teams score more goals on average?
+barplot(home, xlab = "Score (# of Goals)", ylab = "Freq. of Total Goals at Home", col = "lavender", main = "Home Game Statistics")
+```
+
+
+```{r}
+barplot(away, xlab = "Score (# of Goals)", ylab = "Freq. of Total Goals While Away", col = "light blue", main = "Away Game Statistics")
+```
+
+
+```{r}
+
+#2.7 (a)	Try this the long way: convert UCBAdmissions to a data frame (as.data.frame()), manipulate the factors (e.g., interaction()), then convert back to a table (as.data.frame())
+as.data.frame(UCBAdmissions)
+
+```
+```{r}
+#I tried this code, but it's not working
+interaction(UCBAdmissions["Admit"])
+```
+```{r}
+#Next i did some research and tried this:
+UCB <-UCBAdmissions
+#as.data.frame(UCB, stringsAsFactors = default.stringsAsFactors(UCB))
+```
+
+
+```{r}
+#2.7 (b)	Try this the short way: both ftable() and structable() have as.matrix() methods that convert their result to a matrix.
+
+as.matrix(ftable(UCBAdmissions))
+```
+
+```{r}
+#2.8. The data set VisualAcuity in vcd gives a 4 × 4 × 2 table as a frequency data frame.
+#(a)	From this, use xtabs() to create two 4 × 4 frequency tables, one for each gender.
+data("VisualAcuity", package = "vcd")
+ 
+```
+
+```{r}
+library(vcd)
+```
+
+```{r}
+xtabs(VisualAcuity)
+```
+
+```{r}
+#(b)	Use structable() to create a nicely organized tabular display.
+structable(VisualAcuity)
+```
+
+```{r}
+#(c)	Use xtable() to create a LATEX or HTML table.
+library(fpc)
+View(VisualAcuity)
+```
+
+```{r}
+## Demonstrate data.frame
+#vis.table <- xtable(VisualAcuity, ncol("right", "left", "gender"), nrow("1", "32"))
+xtable(VisualAcuity$right, VisualAcuity$left, 4)
+
+print(xtable(VisualAcuity$right, VisualAcuity$left, 4), type = "html")
+#print(vis.table, type = "html")
+```
+```{r}
+
+```
+
+
+
